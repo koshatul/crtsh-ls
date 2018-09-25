@@ -176,28 +176,22 @@ $(GOCOVMERGE):
 
 MISSPELL := $(GOPATH)/bin/misspell
 $(MISSPELL):
-	export GO111MODULE=off
-	go install github.com/client9/misspell/cmd/misspell
+	GO111MODULE=off go get -u github.com/client9/misspell/cmd/misspell
 
 ERRCHECK := $(GOPATH)/bin/errcheck
 $(ERRCHECK):
-	export GO111MODULE=off
-	go install github.com/kisielk/errcheck
+	GO111MODULE=off go get -uthub.com/kisielk/errcheck
 
 GOMETALINTER := $(GOPATH)/bin/gometalinter
 .PRECIOUS: $(GOMETALINTER)
 $(GOMETALINTER):
-	export GO111MODULE=off
-	# export BINDIR=$(GOPATH)/bin
-	# curl https://git.io/vp6lP | sh
-	go install github.com/alecthomas/gometalinter
+	GO111MODULE=off go get -uthub.com/alecthomas/gometalinter
 	$(GOMETALINTER) --install 2>/dev/null
 
 GOLANGCILINT := $(GOPATH)/bin/golangci-lint
 .PRECIOUS: $(GOLANGCILINT)
 $(GOLANGCILINT):
-	export GO111MODULE=off
-	go install -i github.com/golangci/golangci-lint/cmd/golangci-lint
+	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | GO111MODULE=off bash -s -- -b $(GOPATH)/bin v1.10.2
 
 
 go.mod: $(_DEP_REQ)
@@ -256,21 +250,22 @@ artifacts/logs/lint: vendor $(_SRC) $(REQ) | $(MISSPELL) $(GOLANGCILINT) $(USE)
 
 	$(MISSPELL) -w -error -locale US ./src | tee -a "$@"
 
-	@# $(GOMETALINTER) --disable-all --deadline=60s \
-	@# 	--enable=vet \
-	@# 	--enable=vetshadow \
-	@# 	--enable=ineffassign \
-	@# 	--enable=deadcode \
-	@# 	--enable=gosimple \
-	@# 	--enable=gofmt \
-	@# 	./src/... | tee -a "$@"
+	$(GOLANGCILINT) run --disable-all --deadline=60s \
+		--enable govet \
+		--enable deadcode \
+		--enable gofmt \
+		--enable ineffassign \
+		./src/... | tee -a "$@"
 
-	$(GOLANGCILINT) run ./src/... | tee -a "$@"
+	-$(GOLANGCILINT) run --disable-all --deadline=60s \
+		--enable golint \
+		--enable goconst \
+		--enable gocyclo \
+		./src/... | tee -a "$@"
 
-	-$(GOMETALINTER) --disable-all --deadline=60s --cyclo-over=15 \
-		--enable=golint \
-		--enable=goconst \
-		--enable=gocyclo \
+	-$(GOLANGCILINT) run --disable-all --deadline=60s \
+		--enable gosimple \
+		--enable staticcheck \
 		./src/... | tee -a "$@"
 
 artifacts/logs/errcheck: vendor $(wildcard .errignore) $(_SRC) $(REQ) | $(ERRCHECK) $(USE)
