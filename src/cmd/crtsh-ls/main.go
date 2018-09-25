@@ -29,6 +29,7 @@ func init() {
 	rootCmd.PersistentFlags().StringP("format", "f", "{{padlen .NameValue 20}}\t{{.NotBefore}}\t{{.NotAfter}}", "Output formatting (go template).\n Possible items are IssuerCaID, IssuerName, NameValue, MinCertID, MinEntryTimestamp, NotBefore, NotAfter.\n")
 	rootCmd.PersistentFlags().BoolP("debug", "d", false, "Debug output. ")
 	rootCmd.PersistentFlags().DurationP("timeout", "t", 50*time.Second, "Request timeout.")
+	rootCmd.PersistentFlags().Bool("only-valid", false, "Only display still (date) valid certificates.")
 
 	err := multierr.Combine(
 		viper.BindPFlag("format", rootCmd.PersistentFlags().Lookup("format")),
@@ -37,6 +38,8 @@ func init() {
 		viper.BindEnv("timeout", "TIMEOUT"),
 		viper.BindPFlag("debug", rootCmd.PersistentFlags().Lookup("debug")),
 		viper.BindEnv("debug", "DEBUG"),
+		viper.BindPFlag("only-valid", rootCmd.PersistentFlags().Lookup("only-valid")),
+		viper.BindEnv("only-valid", "ONLY_VALID"),
 	)
 	if err != nil {
 		logrus.Fatal(err)
@@ -74,6 +77,16 @@ func mainCommand(cmd *cobra.Command, args []string) {
 			break
 		} else if err != nil {
 			logrus.Fatal(err)
+		}
+		if viper.GetBool("only-valid") {
+			t, err := time.Parse("2006-01-02T15:04:05", cert.NotAfter)
+			if err != nil {
+				logrus.Debugf("Failed to parse time: %s (%s)", cert.NotAfter, err.Error())
+				continue
+			}
+			if t.Before(time.Now()) {
+				continue
+			}
 		}
 		if err := tmpl.Execute(os.Stdout, cert); err != nil {
 			logrus.Warnf("Unable to format line: %s", err.Error())

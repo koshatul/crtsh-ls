@@ -146,7 +146,7 @@ prepare: lint artifacts/logs/errcheck test
 
 # Run the CI build.
 .PHONY: ci
-ci:: ci-lint $(_COV)
+ci:: vendor ci-lint $(_COV)
 	go test -race ./src/...
 
 # A hook for adding linting to CI builds
@@ -202,7 +202,6 @@ endif
 
 go.sum: go.mod
 	GO111MODULE=on go mod verify
-
 
 .PHONY: vendor
 vendor: go.mod

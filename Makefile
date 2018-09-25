@@ -8,7 +8,7 @@ APP_DATE ?= $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 DEBUG_ARGS = --ldflags "-X main.version=$(APP_VERSION)-debug -X main.gittag=$(GIT_TAG) -X main.builddate=$(APP_DATE)"
 RELEASE_ARGS = -v -ldflags "-X main.version=$(APP_VERSION) -X main.gittag=$(GIT_TAG) -X main.builddate=$(APP_DATE) -s -w" -tags release
 
--include artifacts/make/vgo/Makefile
+-include artifacts/make/go/Makefile
 
 artifacts/make/%/Makefile:
 	curl -sf https://jmalloc.github.io/makefiles/fetch | bash /dev/stdin $*
