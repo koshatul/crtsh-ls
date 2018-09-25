@@ -201,15 +201,13 @@ $(GOLANGCILINT):
 
 
 go.mod: $(_DEP_REQ)
-	export GO111MODULE=on
 ifeq (,$(wildcard ./go.mod))
-	go mod init
+	GO111MODULE=on go mod init
 endif
-	go mod tidy
+	GO111MODULE=on go mod tidy
 
 go.sum: go.mod
-	export GO111MODULE=on
-	go mod verify
+	GO111MODULE=on go mod verify
 
 
 .PHONY: vendor
@@ -224,8 +222,7 @@ artifacts/build/%: vendor $(REQ) $(_SRC) | $(USE)
 	$(eval PKG   := $(basename $(BIN)))
 	$(eval ARGS  := $(if $(findstring debug,$(BUILD)),$(DEBUG_ARGS),$(RELEASE_ARGS)))
 
-	export GO111MODULE=on
-	CGO_ENABLED=$(CGO_ENABLED) GOOS="$(OS)" GOARCH="$(ARCH)" go build $(ARGS) -o "$@" "./src/cmd/$(PKG)"
+	GO111MODULE=on CGO_ENABLED=$(CGO_ENABLED) GOOS="$(OS)" GOARCH="$(ARCH)" go build $(ARGS) -o "$@" "./src/cmd/$(PKG)"
 
 artifacts/archives/$(PROJECT_NAME)-%.tar.gz: $$(addprefix artifacts/build/release/$$(subst -,/,$$*)/,$(_BINS))
 	@mkdir -p "$(@D)"
