@@ -1,0 +1,33 @@
+-- GO --
+
+test            Run all of the project's tests. The contents of the TEST_ARGS
+                environment variable are passed to "go test".
+
+coverage        Build an HTML coverage report for the entire project.
+
+coverage-open   Build the HTML coverage report and open it in the browser.
+
+build           Build the project's debug executables for the current platform.
+
+debug           Build debug executables for all platforms and architectures in
+                the matrix. See documentation about the MATRIX_OS variable in
+                the Makefile for more information.
+
+release         Build release executables for all platforms and architectures in
+                the matrix.
+
+archives        Build compressed archives containing release executables for all
+                architectures in the matrix. Windows executables are archived in
+                "zip" format. All other platforms use Tar + GZip.
+
+clean           Remove build artifacts.
+
+clean-coverage  Remove coverage reports, including intermediary coverage files
+                and the HTML report.
+
+clean-all       Remove build artifacts and vendored dependencies.
+
+lint            Run a suite of Go linting tools across all source files in the
+                project.
+
+prepare         Prepare for a Git commit by running linting tools, tests, etc.
