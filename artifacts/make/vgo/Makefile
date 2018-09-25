@@ -25,7 +25,7 @@ CGO_ENABLED ?= 0
 #
 # The build-matrix is constructed from all possible permutations of MATRIX_OS and
 # MATRIX_ARCH. The default is to build only for the current OS and architecture.
--include artifacts/make/go/env.in
+-include artifacts/make/vgo/env.in
 MATRIX_OS   ?= $(GOHOSTOS)
 MATRIX_ARCH ?= $(GOHOSTARCH)
 
@@ -159,7 +159,7 @@ ci-before-deploy::
 
 .PHONY:
 usage::
-	@cat artifacts/make/go/usage.txt
+	@cat artifacts/make/vgo/usage.txt
 	@echo
 
 ################################################################################
@@ -281,7 +281,7 @@ endif
 
 # extract the go environment values, even if they're not explicitly set
 # as environment variables, and convert them to Makefile format.
-artifacts/make/go/env.in:
+artifacts/make/vgo/env.in:
 	env -i $(shell go env) | sed -n 's/^\([^=]*\)=\(..*\)/\1 ?= \2/gp' > "$@"
 
 artifacts/logs/go-ci-install:
