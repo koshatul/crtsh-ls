@@ -201,7 +201,7 @@ $(GOLANGCILINT):
 
 
 go.mod: $(_DEP_REQ)
-ifneq (,$(wildcard ./go.mod))
+ifeq (,$(wildcard ./go.mod))
 	go mod init
 endif
 	go mod tidy
