@@ -44,9 +44,6 @@ func init() {
 	if err != nil {
 		logrus.Fatal(err)
 	}
-
-	rootCmd.SetVersionTemplate(`{{with .Name}}{{printf "%s " .}}{{end}}{{printf "version %s" .Version}}`)
-	rootCmd.Version = fmt.Sprintf("%s [%s] (%s)", version, gitCommit, buildDate)
 }
 
 func main() {
