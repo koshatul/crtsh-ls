@@ -1,5 +1,5 @@
 package main
 
 var version = "dev"
-var builddate = "notset"
-var gittag = ""
+var buildDate = "notset"
+var gitCommit = ""

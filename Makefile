@@ -1,12 +1,13 @@
 MATRIX_OS ?= darwin linux windows
 MATRIX_ARCH ?= amd64
 
-GIT_TAG ?= $(shell git rev-parse --short HEAD)
-APP_VERSION ?= $(if $(TRAVIS_TAG),$(TRAVIS_TAG),$(GIT_TAG))
+GIT_COMMIT ?= $(shell git show -s --format=%h)
+GIT_TAG ?= $(shell git tag -l --contains $(GIT_COMMIT))
+APP_VERSION ?= $(if $(TRAVIS_TAG),$(TRAVIS_TAG),$(if $(GIT_TAG),$(GIT_TAG),$(GIT_COMMIT)))
 APP_DATE ?= $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-DEBUG_ARGS = --ldflags "-X main.version=$(APP_VERSION)-debug -X main.gittag=$(GIT_TAG) -X main.builddate=$(APP_DATE)"
-RELEASE_ARGS = -v -ldflags "-X main.version=$(APP_VERSION) -X main.gittag=$(GIT_TAG) -X main.builddate=$(APP_DATE) -s -w" -tags release
+DEBUG_ARGS = --ldflags "-X main.version=$(APP_VERSION)-debug -X main.gitCommit=$(GIT_COMMIT) -X main.buildDate=$(APP_DATE)"
+RELEASE_ARGS = -v -ldflags "-X main.version=$(APP_VERSION) -X main.gitCommit=$(GIT_COMMIT) -X main.buildDate=$(APP_DATE) -s -w" -tags release
 
 -include artifacts/make/go/Makefile
 

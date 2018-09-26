@@ -171,8 +171,7 @@ usage::
 
 GOCOVMERGE := $(GOPATH)/bin/gocovmerge
 $(GOCOVMERGE):
-	export GO111MODULE=off
-	go install github.com/wadey/gocovmerge
+	GO111MODULE=off go get -u github.com/wadey/gocovmerge
 
 MISSPELL := $(GOPATH)/bin/misspell
 $(MISSPELL):
@@ -180,12 +179,12 @@ $(MISSPELL):
 
 ERRCHECK := $(GOPATH)/bin/errcheck
 $(ERRCHECK):
-	GO111MODULE=off go get -uthub.com/kisielk/errcheck
+	GO111MODULE=off go get -u github.com/kisielk/errcheck
 
 GOMETALINTER := $(GOPATH)/bin/gometalinter
 .PRECIOUS: $(GOMETALINTER)
 $(GOMETALINTER):
-	GO111MODULE=off go get -uthub.com/alecthomas/gometalinter
+	GO111MODULE=off go get -u github.com/alecthomas/gometalinter
 	$(GOMETALINTER) --install 2>/dev/null
 
 GOLANGCILINT := $(GOPATH)/bin/golangci-lint

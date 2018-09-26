@@ -46,7 +46,7 @@ func init() {
 	}
 
 	rootCmd.SetVersionTemplate(`{{with .Name}}{{printf "%s " .}}{{end}}{{printf "version %s" .Version}}`)
-	rootCmd.Version = fmt.Sprintf("%s [%s] (%s)", version, gittag, builddate)
+	rootCmd.Version = fmt.Sprintf("%s [%s] (%s)", version, gitCommit, buildDate)
 }
 
 func main() {
