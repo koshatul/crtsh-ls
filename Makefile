@@ -2,7 +2,7 @@ MATRIX_OS ?= darwin linux windows
 MATRIX_ARCH ?= amd64
 
 GIT_COMMIT ?= $(shell git show -s --format=%h)
-GIT_TAG ?= $(shell git tag -l --contains $(GIT_COMMIT))
+GIT_TAG ?= $(shell git tag -l --merged $(GIT_COMMIT))
 APP_VERSION ?= $(if $(TRAVIS_TAG),$(TRAVIS_TAG),$(if $(GIT_TAG),$(GIT_TAG),$(GIT_COMMIT)))
 APP_DATE ?= $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 
