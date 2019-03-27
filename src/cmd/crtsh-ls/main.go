@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"strings"
 	"text/template"
@@ -66,27 +68,35 @@ func mainCommand(cmd *cobra.Command, args []string) {
 		logrus.Fatal(err)
 	}
 
+	buf, _ := ioutil.ReadAll(data)
+	rdr2 := ioutil.NopCloser(bytes.NewBuffer(buf))
+
+	data = rdr2
+
 	dec := json.NewDecoder(data)
 
 	for {
-		cert := CertificateRecord{}
-		if err := dec.Decode(&cert); err == io.EOF {
+		certs := []CertificateRecord{}
+		if err := dec.Decode(&certs); err == io.EOF {
 			break
 		} else if err != nil {
+			logrus.Debugf("Data: %s", buf)
 			logrus.Fatal(err)
 		}
-		if viper.GetBool("only-valid") {
-			t, err := time.Parse("2006-01-02T15:04:05", cert.NotAfter)
-			if err != nil {
-				logrus.Debugf("Failed to parse time: %s (%s)", cert.NotAfter, err.Error())
-				continue
+		for _, cert := range certs {
+			if viper.GetBool("only-valid") {
+				t, err := time.Parse("2006-01-02T15:04:05", cert.NotAfter)
+				if err != nil {
+					logrus.Debugf("Failed to parse time: %s (%s)", cert.NotAfter, err.Error())
+					continue
+				}
+				if t.Before(time.Now()) {
+					continue
+				}
 			}
-			if t.Before(time.Now()) {
-				continue
+			if err := tmpl.Execute(os.Stdout, cert); err != nil {
+				logrus.Warnf("Unable to format line: %s", err.Error())
 			}
-		}
-		if err := tmpl.Execute(os.Stdout, cert); err != nil {
-			logrus.Warnf("Unable to format line: %s", err.Error())
 		}
 	}
 
