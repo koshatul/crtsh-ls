@@ -18,6 +18,7 @@ func configDefaults() {
 
 func configInit() {
 	logrus.SetOutput(os.Stderr)
+
 	if viper.GetBool("debug") {
 		logrus.SetLevel(logrus.DebugLevel)
 	} else {

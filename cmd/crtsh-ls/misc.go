@@ -21,6 +21,7 @@ type CertificateRecord struct {
 	NotAfter          string `json:"not_after"`
 }
 
+// nolint: bodyclose // closed in calling function
 func getCertStream(domain string) (io.ReadCloser, error) {
 	client := &http.Client{
 		Timeout: viper.GetDuration("timeout"),
@@ -44,7 +45,7 @@ func getCertStream(domain string) (io.ReadCloser, error) {
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("Server returned %d http status code (%s)", resp.StatusCode, resp.Status)
+		return nil, fmt.Errorf("server returned %d http status code (%s)", resp.StatusCode, resp.Status)
 	}
 
 	return resp.Body, err

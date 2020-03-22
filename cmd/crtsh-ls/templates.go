@@ -12,6 +12,7 @@ import (
 
 // basicFunctions are the set of initial
 // functions provided to every template.
+// nolint: gochecknoglobals // it's copypasta
 var basicFunctions = template.FuncMap{
 	"json": func(v interface{}) string {
 		buf := &bytes.Buffer{}
@@ -38,6 +39,7 @@ var basicFunctions = template.FuncMap{
 	"t":        stringTab,
 }
 
+// nolint: gochecknoglobals // it's copypasta
 var maxLenPrefix = 0
 
 // padToLength adds whitespace to pad to the supplied length
@@ -55,6 +57,7 @@ func padWithSpace(source string, prefix, suffix int) string {
 	if source == "" {
 		return source
 	}
+
 	return strings.Repeat(" ", prefix) + source + strings.Repeat(" ", suffix)
 }
 
@@ -63,6 +66,7 @@ func stringTrueFalse(source bool) string {
 	if source {
 		return "true"
 	}
+
 	return "false"
 }
 
@@ -71,6 +75,7 @@ func stringYesNo(source bool) string {
 	if source {
 		return "yes"
 	}
+
 	return "no"
 }
 
@@ -84,5 +89,6 @@ func truncateWithLength(source string, length int) string {
 	if len(source) < length {
 		return source
 	}
+
 	return source[:length]
 }
