@@ -1,7 +1,6 @@
 language: go
 go:
-- '1.11'
-- tip
+- '1.14'
 script:
 - make ci
 - make artifacts/build/release/linux/amd64/crtsh-ls
@@ -16,10 +15,8 @@ deploy:
   skip_cleanup: true
   api_key:
     secure: BWGBEzR0+X4Sp2QKhWztf85j6gvQjmfo1oOSPoOk7X0HF+MADHsaeOalfuVzBEGiOItB8AbygY4DauTFJ1TUHCHgJ2eRYtbOpxNyJrrwugJmGWW2BK3ojvriCzuy+VRmP0DkzPhRsjFrj81E6TNtsfW+W0GY38nRsNei7hqXoOLF3+a7KINIPeq5ELEHEFSsnyAb3QNRTD8dWbBca8JPHYGgYowL43fs/sjWXGMyeDV98oLWwePz4wJW3qqcl/E23OqbJFzV4ZEDSEHZg+P227P+CJx7mMrwlNhX+j2Wnvo58Xx8FuCwQ2i7yvibtj9v5FUcJNSNPMKVjB/97riYuZ9PWTOK/lDWn434Ts2QcElCmDgd96IPjP0g6lvwicTS18uXPAdzNM1u5C4YOR9SD2De7dneCP6ADaFFxIrxLphl/NoLY+Zkcq/eU65hylvfZ5Kni/mCoo52kRPFssja5UWm9k4cXBsGMxD/bG/wyJjGv351lOU0k9ePOfe5CgmdiJzg2SRJiyl+SBUKW/vscJ9Jn5yx6FZV5rgSe1n7RR/Qb0VZ/X7QDdOBl/L+Y9PIXpmJkIUmk9L0E/xZu0MNm1KIlzQ0f7bScPeSssRKQtn8Iun7ouWrZcA9upSiDIaUzE+MS6RQ0zcFl5c6RD2FppUITVMgXf6AtLS04EAtt+I=
-  file:
-  - artifacts/archives/crtsh-ls-darwin-amd64.tar.gz
-  - artifacts/archives/crtsh-ls-linux-amd64.tar.gz
-  - artifacts/archives/crtsh-ls-windows-amd64.zip
-  go: '1.11'
+  file_glob: true
+  file: artifacts/archives/*
+  go: '1.14'
   on:
     tags: true
