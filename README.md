@@ -1,4 +1,7 @@
 # crtsh-ls
+
+No longer maintained.
+
 [![Build Status](https://travis-ci.org/koshatul/crtsh-ls.svg?branch=master)](https://travis-ci.org/koshatul/crtsh-ls)
 [![GitHub license](https://img.shields.io/github/license/koshatul/crtsh-ls)](https://github.com/koshatul/crtsh-ls/blob/master/LICENSE)
 
